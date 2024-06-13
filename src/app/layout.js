@@ -1,7 +1,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Link from "next/link";
-import MenuitemF from "@/components/menu";
+
+import MenuBar from "@/components/menubar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,27 +13,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <nav>
-          <div className="w-11/12 md:w-10/12 mx-auto py-14">
-            <div className="flex justify-between items-center">
-              <Link href="/">
-                <h1 className="text-white">My Ads Portal</h1>
-              </Link>
-              <div className="lg:flex lg:gap-8  ">
-                <MenuitemF />
-                <Link href="/login">
-                  <span className="text-white font-semibold rounded-lg">
-                    Login
-                  </span>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </nav>
-
-        {children}
-      </body>
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }

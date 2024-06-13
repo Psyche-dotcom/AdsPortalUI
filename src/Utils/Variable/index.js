@@ -13,7 +13,24 @@ export const lineChartDataDashboard = [
     ),
   },
 ];
+export const lineChartGoogleDataDashboard = [
+  {
+    name: "Google Ads",
+    data: Array.from({ length: 24 }, () =>
+      Math.floor(Math.random() * 100 + 50)
+    ),
+  },
+];
+export const lineChartMetaDataDashboard = [
+  {
+    name: "Meta Ads",
+    data: Array.from({ length: 24 }, () =>
+      Math.floor(Math.random() * 100 + 50)
+    ),
+  },
+];
 export const seriesPie = [2444, 1555];
+export const seriesMetaPie = [2444];
 export const PieOptionDashData = {
   chart: {
     width: 400,

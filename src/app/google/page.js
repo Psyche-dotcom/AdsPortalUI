@@ -1,6 +1,9 @@
+import TopFilter from "@/components/TopFilter";
+import React from "react";
 import {
   PieOptionDashData,
   lineChartDataDashboard,
+  lineChartGoogleDataDashboard,
   lineChartOptionsDashboard,
   seriesPie,
 } from "@/Utils/Variable";
@@ -8,7 +11,6 @@ import MainLayout from "@/components/MainLayout";
 import ResponsiveTable from "@/components/ResponsiveTable";
 
 import dynamic from "next/dynamic";
-import Head from "next/head";
 
 const CusAreaLineChart = dynamic(() => import("@/components/LineChart"), {
   ssr: false,
@@ -17,17 +19,17 @@ const PieChartD = dynamic(() => import("@/components/PieChartD"), {
   ssr: false,
 });
 
-export default function Home() {
+const GooglePage = () => {
   return (
     <MainLayout>
       <div className="text-white w-11/12  mx-auto">
         <section className="flex flex-col gap-8">
           <div className="card-design" style={{ minHeight: "400px" }}>
             <h6 className="mb-4 text-3xl">
-              Daily Hourly Ad Impressions{"(Meta/Google)"}
+              Daily Hourly Ad Impressions Google
             </h6>
             <CusAreaLineChart
-              chartData={lineChartDataDashboard}
+              chartData={lineChartGoogleDataDashboard}
               chartOptions={lineChartOptionsDashboard}
             />
           </div>
@@ -37,7 +39,7 @@ export default function Home() {
               style={{ maxHeight: "500px", maxWidth: "500px" }}
             >
               <h6 className="mb-4">
-                Last Week Ads Impressions Overall{"(Meta/Google) Stats"}
+                Last Week Ads Impressions Overall {"Google Stats"}
               </h6>
               <PieChartD series={seriesPie} options={PieOptionDashData} />
             </div>
@@ -46,17 +48,18 @@ export default function Home() {
               style={{ maxHeight: "500px", maxWidth: "500px" }}
             >
               <h6 className="mb-4">
-                Current Week Ads Impressions Overall{"(Meta/Google) Stats"}
+                Current Week Ads Impressions Overall{" Google Stats"}
               </h6>
               <PieChartD series={seriesPie} options={PieOptionDashData} />
             </div>
           </section>
           <section className="mb-10">
             <div className="card-design">
-              <div className="flex flex-col">
+              <div className="flex flex-col gap-4">
                 <h6 className="mb-4">
-                  LiveFeed Data For all Ads{"(Meta/Google) Stats"}
+                  Live Feed Data For all {"Google Ads Stats"}
                 </h6>
+                <TopFilter />
                 <ResponsiveTable />
                 <div className="mt-4 self-end">
                   <button
@@ -75,4 +78,6 @@ export default function Home() {
       </div>
     </MainLayout>
   );
-}
+};
+
+export default GooglePage;
