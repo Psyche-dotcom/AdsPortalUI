@@ -1,16 +1,18 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import MenuitemF from "../menu";
+import { AuthContext } from "@/Utils/AuthContext"; // Adjust the import path as necessary
 
 const MenuBar = () => {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const pathname = usePathname();
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
   useEffect(() => {
-    const loginStatus = localStorage.getItem("islogin") === "true";
+    const loginStatus = localStorage.getItem("islogin");
+
     if (loginStatus !== "true" && pathname === "/register") {
       router.push("/register");
     } else if (loginStatus === "false") {
@@ -18,7 +20,7 @@ const MenuBar = () => {
     } else if (loginStatus === "true") {
       setIsLoggedIn(true);
     }
-  }, [router]);
+  }, [router, setIsLoggedIn]);
 
   const handleLogout = () => {
     localStorage.removeItem("islogin");

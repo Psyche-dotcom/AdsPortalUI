@@ -1,8 +1,9 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import MainLayout from "@/components/MainLayout";
+import { AuthContext } from "@/Utils/AuthContext"; // Adjust the import path as necessary
 
 const LoginSection = () => {
   const [username, setUsername] = useState("");
@@ -10,6 +11,7 @@ const LoginSection = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { setIsLoggedIn } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,7 +25,8 @@ const LoginSection = () => {
     }
 
     try {
-      localStorage.setItem("islogin", true);
+      localStorage.setItem("islogin", "true");
+      setIsLoggedIn(true);
       router.push("/");
     } catch (error) {
       setError(error.message);
