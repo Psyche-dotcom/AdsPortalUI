@@ -3,7 +3,6 @@ import { PieOptionDashData } from "@/Utils/Variable";
 import MainLayout from "@/components/MainLayout";
 import ResponsiveTable from "@/components/ResponsiveTable";
 import { postData } from "@/util/ApiService";
-
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -25,6 +24,8 @@ export default function Home() {
   const [tableData, setTableData] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const router = useRouter();
 
   const apiCallImpression = async (loginToken) => {
@@ -40,9 +41,11 @@ export default function Home() {
       );
       if (response.statusCode === 200) {
         return response.result;
+      } else {
+        throw new Error(response.message);
       }
     } catch (error) {
-      console.error(error);
+      throw error;
     }
   };
 
@@ -59,9 +62,11 @@ export default function Home() {
       );
       if (response.statusCode === 200) {
         return response.result;
+      } else {
+        throw new Error(response.message);
       }
     } catch (error) {
-      console.error(error);
+      throw error;
     }
   };
 
@@ -77,11 +82,12 @@ export default function Home() {
         "Bearer " + loginToken
       );
       if (response.statusCode === 200) {
-        console.log(response);
         return response.result;
+      } else {
+        throw new Error(response.message);
       }
     } catch (error) {
-      console.error(error);
+      throw error;
     }
   };
 
@@ -99,14 +105,19 @@ export default function Home() {
       if (response.statusCode === 200) {
         setTotalPages(response.result.totalPages);
         return response.result.metaStats;
+      } else {
+        throw new Error(response.message);
       }
     } catch (error) {
-      console.error(error);
+      throw error;
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
       const loginToken = localStorage.getItem("token");
 
       if (!loginToken) {
@@ -214,8 +225,14 @@ export default function Home() {
         const tableResult = await apiCallTableData(loginToken, pageNumber);
         setTableData(tableResult);
       }
-    };
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, [router, pageNumber]);
 
@@ -235,70 +252,83 @@ export default function Home() {
     <MainLayout>
       <div className="text-white w-11/12 mx-auto">
         <section className="flex flex-col gap-8">
-          <div className="card-design" style={{ minHeight: "400px" }}>
-            <h6 className="mb-4 text-3xl">
-              Daily Hourly Ad Impressions{"(Meta/Google)"}
-            </h6>
-            <CusAreaLineChart
-              chartData={lineChartDataDashboard}
-              chartOptions={lineChartOptionsDashboard}
-            />
-          </div>
-          <section className="flex items-center justify-between gap-4">
-            <div
-              className="card-design"
-              style={{ maxHeight: "500px", maxWidth: "500px" }}
-            >
-              <h6 className="mb-4">
-                Current Daily Ads Click Overall{"(Meta/Google) Stats"}
-              </h6>
-              <PieChartD
-                series={seriesPieDataClick}
-                options={PieOptionDashData}
-              />
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="loader">Loading...</div>
             </div>
-            <div
-              className="card-design"
-              style={{ maxHeight: "500px", maxWidth: "500px" }}
-            >
-              <h6 className="mb-4">
-                Current Daily Ads Reach Overall{"(Meta/Google) Stats"}
-              </h6>
-              <PieChartD series={seriesPieData} options={PieOptionDashData} />
-            </div>
-          </section>
-          <section className="mb-10">
-            <div className="card-design">
-              <div className="flex flex-col">
-                <h6 className="mb-4">
-                  Live Feed Data For all Ads{"(Meta/Google) Stats"}
+          ) : error ? (
+            <div className="text-red-500 text-center">{error}</div>
+          ) : (
+            <>
+              <div className="card-design" style={{ minHeight: "400px" }}>
+                <h6 className="mb-4 text-3xl">
+                  Daily Hourly Ad Impressions{"(Meta/Google)"}
                 </h6>
-                <ResponsiveTable data={tableData} />
-                <div className="mt-4 self-end flex gap-4">
-                  <button
-                    className="bg-white py-2 px-4 rounded"
-                    style={{
-                      color: "rgba(6, 11, 40, 0.94)",
-                    }}
-                    onClick={handleNextPage}
-                    disabled={pageNumber >= totalPages}
-                  >
-                    View More
-                  </button>
-                  <button
-                    className="bg-white py-2 px-4 rounded"
-                    style={{
-                      color: "rgba(6, 11, 40, 0.94)",
-                    }}
-                    onClick={handlePrevPage}
-                    disabled={pageNumber <= 1}
-                  >
-                    View Previous
-                  </button>
-                </div>
+                <CusAreaLineChart
+                  chartData={lineChartDataDashboard}
+                  chartOptions={lineChartOptionsDashboard}
+                />
               </div>
-            </div>
-          </section>
+              <section className="flex items-center justify-between gap-4">
+                <div
+                  className="card-design"
+                  style={{ maxHeight: "500px", maxWidth: "500px" }}
+                >
+                  <h6 className="mb-4">
+                    Current Daily Ads Click Overall{"(Meta/Google) Stats"}
+                  </h6>
+                  <PieChartD
+                    series={seriesPieDataClick}
+                    options={PieOptionDashData}
+                  />
+                </div>
+                <div
+                  className="card-design"
+                  style={{ maxHeight: "500px", maxWidth: "500px" }}
+                >
+                  <h6 className="mb-4">
+                    Current Daily Ads Reach Overall{"(Meta/Google) Stats"}
+                  </h6>
+                  <PieChartD
+                    series={seriesPieData}
+                    options={PieOptionDashData}
+                  />
+                </div>
+              </section>
+              <section className="mb-10">
+                <div className="card-design">
+                  <div className="flex flex-col">
+                    <h6 className="mb-4">
+                      Live Feed Data For all Ads{"(Meta/Google) Stats"}
+                    </h6>
+                    <ResponsiveTable data={tableData} />
+                    <div className="mt-4 self-end flex gap-4">
+                      <button
+                        className="bg-white py-2 px-4 rounded"
+                        style={{
+                          color: "rgba(6, 11, 40, 0.94)",
+                        }}
+                        onClick={handleNextPage}
+                        disabled={pageNumber >= totalPages}
+                      >
+                        View More
+                      </button>
+                      <button
+                        className="bg-white py-2 px-4 rounded"
+                        style={{
+                          color: "rgba(6, 11, 40, 0.94)",
+                        }}
+                        onClick={handlePrevPage}
+                        disabled={pageNumber <= 1}
+                      >
+                        View Previous
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </>
+          )}
         </section>
       </div>
     </MainLayout>

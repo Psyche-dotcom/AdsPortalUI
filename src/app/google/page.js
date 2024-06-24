@@ -22,7 +22,7 @@ const PieChartD = dynamic(() => import("@/components/PieChartD"), {
 const GooglePage = () => {
   return (
     <MainLayout>
-      <div className="text-white w-11/12  mx-auto">
+      {/* <div className="text-white w-11/12  mx-auto">
         <section className="flex flex-col gap-8">
           <div className="card-design" style={{ minHeight: "400px" }}>
             <h6 className="mb-4 text-3xl">
@@ -75,7 +75,8 @@ const GooglePage = () => {
             </div>
           </section>
         </section>
-      </div>
+      </div> */}
+      <p className="text-center text-3xl text-white">Coming soon</p>
     </MainLayout>
   );
 };
