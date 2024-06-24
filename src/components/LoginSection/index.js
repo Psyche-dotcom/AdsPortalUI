@@ -3,7 +3,8 @@ import Link from "next/link";
 import React, { useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import MainLayout from "@/components/MainLayout";
-import { AuthContext } from "@/Utils/AuthContext"; // Adjust the import path as necessary
+import { AuthContext } from "@/Utils/AuthContext";
+import { postData } from "@/util/ApiService";
 
 const LoginSection = () => {
   const [username, setUsername] = useState("");
@@ -24,12 +25,21 @@ const LoginSection = () => {
       return;
     }
 
+    var loginData = {
+      email: username,
+      password: password,
+    };
     try {
-      localStorage.setItem("islogin", "true");
-      setIsLoggedIn(true);
-      router.push("/");
+      var baseUrl = process.env.NEXT_PUBLIC_API_URL;
+      var response = await postData(baseUrl + "api/user/auth/login", loginData);
+      if (response.statusCode === 200) {
+        localStorage.setItem("token", response.result.jwt);
+        setIsLoggedIn(true);
+        router.push("/");
+      }
     } catch (error) {
-      setError(error.message);
+      console.error(error);
+      setError(error.response.data.errorMessages[0]);
       setLoading(false);
     }
   };
@@ -41,7 +51,7 @@ const LoginSection = () => {
           <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label className="block text-gray-700">Username</label>
+              <label className="block text-gray-700">Email</label>
               <input
                 type="text"
                 className="w-full p-2 border border-gray-300 rounded mt-1"

@@ -11,19 +11,19 @@ const MenuBar = () => {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
   useEffect(() => {
-    const loginStatus = localStorage.getItem("islogin");
+    const loginStatus = localStorage.getItem("token");
 
-    if (loginStatus !== "true" && pathname === "/register") {
+    if (loginStatus === null && pathname === "/register") {
       router.push("/register");
-    } else if (loginStatus === "false") {
+    } else if (loginStatus === null) {
       router.push("/login");
-    } else if (loginStatus === "true") {
+    } else if (loginStatus !== null) {
       setIsLoggedIn(true);
     }
   }, [router, setIsLoggedIn]);
 
   const handleLogout = () => {
-    localStorage.removeItem("islogin");
+    localStorage.removeItem("token");
     setIsLoggedIn(false);
     router.push("/login");
   };

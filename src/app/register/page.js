@@ -1,14 +1,19 @@
 "use client";
 import MainLayout from "@/components/MainLayout";
+import { postData } from "@/util/ApiService";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const RegisterPage = () => {
+  const router = useRouter();
+
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     username: "",
     firstName: "",
     lastName: "",
+    phoneNumber: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -25,9 +30,10 @@ const RegisterPage = () => {
       if (!formData.email) newErrors.email = "Email is required";
     } else if (step === 3) {
       if (!formData.password) newErrors.password = "Password is required";
-      if (formData.password !== formData.confirmPassword)
-        newErrors.confirmPassword = "Passwords do not match";
+      if (!formData.phoneNumber)
+        newErrors.password = "Phone number is required";
     }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -46,11 +52,31 @@ const RegisterPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateStep()) {
-      // Submit form data
-      console.log("Form submitted", formData);
+      var regData = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        userName: formData.username,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        password: formData.password,
+        confirmPassword: formData.password,
+      };
+      try {
+        var baseUrl = process.env.NEXT_PUBLIC_API_URL;
+        var response = await postData(
+          baseUrl + "api/user/auth/register",
+          regData
+        );
+        if (response.statusCode === 200) {
+          alert("Successfully signed up");
+          router.push("/login");
+        }
+      } catch (error) {
+        console.log("Form submitted error", error);
+      }
     }
   };
 
@@ -123,6 +149,19 @@ const RegisterPage = () => {
             {step === 3 && (
               <>
                 <div className="mb-4">
+                  <label className="block text-gray-700">Phone Number</label>
+                  <input
+                    type="text"
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded mt-1"
+                  />
+                  {errors.phoneNumber && (
+                    <p className="text-red-500 text-sm">{errors.phoneNumber}</p>
+                  )}
+                </div>
+                <div className="mb-4">
                   <label className="block text-gray-700">Password</label>
                   <input
                     type="password"
@@ -133,23 +172,6 @@ const RegisterPage = () => {
                   />
                   {errors.password && (
                     <p className="text-red-500 text-sm">{errors.password}</p>
-                  )}
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700">
-                    Confirm Password
-                  </label>
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    className="w-full p-2 border border-gray-300 rounded mt-1"
-                  />
-                  {errors.confirmPassword && (
-                    <p className="text-red-500 text-sm">
-                      {errors.confirmPassword}
-                    </p>
                   )}
                 </div>
               </>

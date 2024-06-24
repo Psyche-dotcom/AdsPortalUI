@@ -8,7 +8,7 @@ export const lineChartDataDashboard = [
   },
   {
     name: "Meta Ads",
-    data: Array.from({ length: 24 }, () =>
+    data: Array.from({ length: 20 }, () =>
       Math.floor(Math.random() * 100 + 50)
     ),
   },
@@ -16,7 +16,7 @@ export const lineChartDataDashboard = [
 export const lineChartGoogleDataDashboard = [
   {
     name: "Google Ads",
-    data: Array.from({ length: 24 }, () =>
+    data: Array.from({ length: 20 }, () =>
       Math.floor(Math.random() * 100 + 50)
     ),
   },

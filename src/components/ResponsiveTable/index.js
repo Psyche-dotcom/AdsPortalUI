@@ -11,39 +11,7 @@ import {
   TableRow,
 } from "@mui/material";
 
-const ResponsiveTable = () => {
-  // Mock data
-  const data = [
-    {
-      id: 1,
-      adsId: "AD001",
-      impressionCount: 100,
-      dateTime: "2024-06-09 08:00",
-      channel: "Google",
-    },
-    {
-      id: 2,
-      adsId: "AD002",
-      impressionCount: 150,
-      dateTime: "2024-06-09 09:00",
-      channel: "Meta",
-    },
-    {
-      id: 3,
-      adsId: "AD003",
-      impressionCount: 120,
-      dateTime: "2024-06-09 10:00",
-      channel: "Google",
-    },
-    {
-      id: 4,
-      adsId: "AD004",
-      impressionCount: 90,
-      dateTime: "2024-06-09 11:00",
-      channel: "Meta",
-    },
-  ];
-
+const ResponsiveTable = ({ data }) => {
   return (
     <TableContainer
       component={Paper}
@@ -54,32 +22,90 @@ const ResponsiveTable = () => {
       <Table aria-label="responsive table">
         <TableHead>
           <TableRow>
-            <TableCell style={{ color: "white" }}>Ads Id</TableCell>
+            <TableCell style={{ color: "white" }}>CPM</TableCell>
             <TableCell align="right" style={{ color: "white" }}>
-              Impression count
+              Impressions
             </TableCell>
             <TableCell align="right" style={{ color: "white" }}>
-              DateTime
+              Reach
+            </TableCell>
+            <TableCell align="right" style={{ color: "white" }}>
+              Clicks
+            </TableCell>
+            <TableCell align="right" style={{ color: "white" }}>
+              CTR
+            </TableCell>
+            <TableCell align="right" style={{ color: "white" }}>
+              Spend
+            </TableCell>
+            <TableCell align="right" style={{ color: "white" }}>
+              Frequency
+            </TableCell>
+            <TableCell align="right" style={{ color: "white" }}>
+              Stat Date
             </TableCell>
             <TableCell align="right" style={{ color: "white" }}>
               Channel
             </TableCell>
+            <TableCell align="right" style={{ color: "white" }}>
+              Unique Clicks
+            </TableCell>
+            <TableCell align="right" style={{ color: "white" }}>
+              Date Start
+            </TableCell>
+            <TableCell align="right" style={{ color: "white" }}>
+              Date Stop
+            </TableCell>
+            <TableCell align="right" style={{ color: "white" }}>
+              Age
+            </TableCell>
+            <TableCell align="right" style={{ color: "white" }}>
+              Gender
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell component="th" scope="row" style={{ color: "white" }}>
-                {row.adsId}
+          {data.map((row, index) => (
+            <TableRow key={index}>
+              <TableCell style={{ color: "white" }}>{row.cpm}</TableCell>
+              <TableCell align="right" style={{ color: "white" }}>
+                {row.impressions}
               </TableCell>
               <TableCell align="right" style={{ color: "white" }}>
-                {row.impressionCount}
+                {row.reach}
               </TableCell>
               <TableCell align="right" style={{ color: "white" }}>
-                {row.dateTime}
+                {row.clicks}
+              </TableCell>
+              <TableCell align="right" style={{ color: "white" }}>
+                {row.ctr}
+              </TableCell>
+              <TableCell align="right" style={{ color: "white" }}>
+                {row.spend}
+              </TableCell>
+              <TableCell align="right" style={{ color: "white" }}>
+                {row.frequency}
+              </TableCell>
+              <TableCell align="right" style={{ color: "white" }}>
+                {row.stat_date}
               </TableCell>
               <TableCell align="right" style={{ color: "white" }}>
                 {row.channel}
+              </TableCell>
+              <TableCell align="right" style={{ color: "white" }}>
+                {row.unique_clicks}
+              </TableCell>
+              <TableCell align="right" style={{ color: "white" }}>
+                {row.date_start}
+              </TableCell>
+              <TableCell align="right" style={{ color: "white" }}>
+                {row.date_stop}
+              </TableCell>
+              <TableCell align="right" style={{ color: "white" }}>
+                {row.age}
+              </TableCell>
+              <TableCell align="right" style={{ color: "white" }}>
+                {row.gender}
               </TableCell>
             </TableRow>
           ))}
