@@ -9,6 +9,7 @@ import { PieOptionDashData, PieOptionMetaDashData } from "@/Utils/Variable";
 import { useRouter } from "next/navigation";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Link from "next/link";
 
 const CusAreaLineChart = dynamic(() => import("@/components/LineChart"), {
   ssr: false,
@@ -243,15 +244,25 @@ const MetaPage = () => {
     <MainLayout>
       <div className="text-white w-11/12 mx-auto">
         <section className="flex flex-col gap-8">
-          <p className="text-center">Select Stats Date</p>
-          <div className=" self-center">
-            {" "}
-            <DatePicker
-              selected={selectedDate}
-              onChange={(date) => handleFilter(date)}
-              dateFormat="yyyy-MM-dd"
-              className="text-white bg-zinc-600 p-4 rounded-xl"
-            />
+          <div className="flex justify-between gap-8">
+            <div>
+              <p className="text-center">Select Stats Date</p>
+              <div className=" self-center">
+                {" "}
+                <DatePicker
+                  selected={selectedDate}
+                  onChange={(date) => handleFilter(date)}
+                  dateFormat="yyyy-MM-dd"
+                  className="text-white bg-zinc-600 p-4 rounded-xl"
+                />
+              </div>
+            </div>
+            <Link href={"/meta/ads_management"}>
+              {" "}
+              <button className="text-white bg-green-700 p-6">
+                Ads Management
+              </button>
+            </Link>
           </div>
           {loading ? (
             <div className="flex justify-center items-center h-64">
